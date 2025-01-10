@@ -21,7 +21,7 @@ def verify(id, pw):
     _conn = sqlite3.connect(user_db_file_location)
     _c = _conn.cursor()
 
-    _c.execute("SELECT pw FROM users WHERE id = '" + id + "';")
+    _c.execute("SELECT pw FROM users WHERE id = ?" + ";", (id, ))
     result = _c.fetchone()[0] == hashlib.sha256(pw.encode()).hexdigest()
     
     _conn.close()
@@ -64,8 +64,8 @@ def read_note_from_db(id):
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
 
-    command = "SELECT note_id, timestamp, note FROM notes WHERE user = '" + id.upper() + "';" 
-    _c.execute(command)
+    command = "SELECT note_id, timestamp, note FROM notes WHERE user = ?" + ";" 
+    _c.execute(command, (id.upper(), ))
     result = _c.fetchall()
 
     _conn.commit()
@@ -78,8 +78,8 @@ def match_user_id_with_note_id(note_id):
     _conn = sqlite3.connect(note_db_file_location)
     _c = _conn.cursor()
 
-    command = "SELECT user FROM notes WHERE note_id = '" + note_id + "';" 
-    _c.execute(command)
+    command = "SELECT user FROM notes WHERE note_id = ?" + ";" 
+    _c.execute(command, (note_id, ))
     result = _c.fetchone()[0]
 
     _conn.commit()
@@ -133,8 +133,8 @@ def match_user_id_with_image_uid(image_uid):
     _conn = sqlite3.connect(image_db_file_location)
     _c = _conn.cursor()
 
-    command = "SELECT owner FROM images WHERE uid = '" + image_uid + "';" 
-    _c.execute(command)
+    command = "SELECT owner FROM images WHERE uid = ?" + ";" 
+    _c.execute(command, (image_uid, ))
     result = _c.fetchone()[0]
 
     _conn.commit()
